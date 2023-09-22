@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoBucketList"
         tools:targetApi="m"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".fragments.FragmentTodo"
             android:exported="false" />

@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.fragments;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -18,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -35,6 +37,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.tsj2023.todobucketlist.R;
 import com.tsj2023.todobucketlist.activities.MainActivity;
+import com.tsj2023.todobucketlist.adapters.BucketListRecyclerAdapter;
+import com.tsj2023.todobucketlist.data.BucketlistItem;
+import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.FragmentBucketlistBinding;
 import com.tsj2023.todobucketlist.databinding.FragmentTodoBinding;
 
@@ -45,12 +50,16 @@ public class FragmentBucketList extends Fragment {
 
     FragmentBucketlistBinding binding;
     PieChart pieChart;
+    ArrayList<BucketlistItem> bucketlistItems = new ArrayList<>();
+    BucketListRecyclerAdapter adapter;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentBucketlistBinding.inflate(inflater, container, false);
+
+        binding.fabBucketlist.setOnClickListener(view -> clickfab());
 
         pieChart=binding.chart;
         ArrayList<PieEntry> dataValue=new ArrayList<PieEntry>();
@@ -79,6 +88,30 @@ public class FragmentBucketList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        bucketlistItems.add(new BucketlistItem("실험용 자료추가",true));
+
+        adapter=new BucketListRecyclerAdapter(getContext(),bucketlistItems);
+        binding.bucketlistRecyclerView.setAdapter(adapter);
+
+    }
+    void clickfab(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(R.layout.dialog_add_bucketlist);
+        builder.setPositiveButton("등록", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
     }
 
