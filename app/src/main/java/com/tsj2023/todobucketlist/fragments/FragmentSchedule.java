@@ -57,8 +57,9 @@ public class FragmentSchedule extends Fragment{
     FragmentScheduleBinding binding;
     CalendarView calendarView;
     FusedLocationProviderClient fusedLocationProviderClient;
-
     static RequestQueue requestQueue;
+    double latitude=0;
+    double longitude=0;
 
     @Nullable
     @Override
@@ -94,7 +95,6 @@ public class FragmentSchedule extends Fragment{
             }
         }); // 위치 정보 얻어오기 끝
 
-        CurrentWeatherCall();
         long now = System.currentTimeMillis();
         Date date = new Date(now);
 
@@ -112,10 +112,10 @@ public class FragmentSchedule extends Fragment{
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        CurrentWeatherCall();
         super.onViewCreated(view, savedInstanceState);
     }
-    double latitude=0;
-    double longitude=0;
+
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
@@ -147,7 +147,7 @@ public class FragmentSchedule extends Fragment{
                     weatherJson = jsonObject.getJSONArray("weather");
                     JSONObject weatherObj = weatherJson.getJSONObject(0);
                     String weather = weatherObj.getString("description");
-                    binding.tvWeather.setText(latitude+""+longitude+"");
+                    binding.tvWeather.setText(weather);
 
                     tempK = new JSONObject(jsonObject.getString("main"));
                     double tempDo = (Math.round((tempK.getDouble("temp")-273.15)*100)/100.0);
