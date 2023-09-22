@@ -10,19 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.view.inputmethod.InputMethodSession;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tsj2023.todobucketlist.R;
-import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.adapters.TodoRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.DialogAddTodoBinding;
@@ -50,7 +42,6 @@ public class FragmentTodo extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-        todoItems.add(new TodoItem("실험용 자료추가",true));
         adapter = new TodoRecyclerAdapter(getContext(),todoItems);
         binding.todoRecyclerView.setAdapter(adapter);
     }
@@ -68,12 +59,10 @@ public class FragmentTodo extends Fragment{
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String a = editTextTodo.getEditText().getText().toString();
-                Log.d("a", a);
                 if (!TextUtils.isEmpty(a)) {
                     // This block is responsible for checking if edittext is empty and carrying out the action
                     todoItems.add(new TodoItem(a, false));
                     adapter.notifyDataSetChanged();
-
                 }
             }
         });

@@ -20,7 +20,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout"
+        android:id="@+id/text_input_layout_bucket"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="버킷리스트를 입력하세요"

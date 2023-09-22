@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.type.DateTime;
 import com.kizitonwose.calendarview.CalendarView;
 import com.kizitonwose.calendarview.model.CalendarDay;
 import com.kizitonwose.calendarview.ui.DayBinder;
@@ -46,25 +48,32 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
 public class FragmentSchedule extends Fragment{
 
     FragmentScheduleBinding binding;
-    CalendarView calendarView;
     FusedLocationProviderClient fusedLocationProviderClient;
     static RequestQueue requestQueue;
     double latitude=0;
     double longitude=0;
+    CalendarView calendarView;
+    LocalDate selectedDate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding=FragmentScheduleBinding.inflate(inflater,container,false);
+
         if(requestQueue == null){
             requestQueue = Volley.newRequestQueue(getActivity());
         }
@@ -100,6 +109,7 @@ public class FragmentSchedule extends Fragment{
 
         return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -174,6 +184,6 @@ public class FragmentSchedule extends Fragment{
         }
     });
 
-
 }
+
 

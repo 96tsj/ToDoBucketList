@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.telephony.CarrierConfigManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.tsj2023.todobucketlist.R;
 import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.adapters.BucketListRecyclerAdapter;
@@ -88,25 +90,33 @@ public class FragmentBucketList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bucketlistItems.add(new BucketlistItem("실험용 자료추가",true));
-
         adapter=new BucketListRecyclerAdapter(getContext(),bucketlistItems);
         binding.bucketlistRecyclerView.setAdapter(adapter);
 
     }
     void clickfab(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(R.layout.dialog_add_bucketlist);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+        View dialogView = layoutInflater.inflate(R.layout.dialog_add_bucketlist, null);
+
+        // DialogAddTodoBinding으로부터 EditText를 참조합니다.
+        TextInputLayout editTextBucket = dialogView.findViewById(R.id.text_input_layout_bucket);
+        builder.setView(dialogView);
+
         builder.setPositiveButton("등록", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                String s= editTextBucket.getEditText().getText().toString();
+                if (!TextUtils.isEmpty(s)){
+                    bucketlistItems.add(new BucketlistItem(s,false));
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                dialogInterface.cancel();
             }
         });
 

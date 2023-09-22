@@ -13,6 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/todo_stamp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@drawable/complete_removebg"
+            android:visibility="invisible"/>
+
         <TextView
             android:id="@+id/tv_recycler_item_todo"
             android:layout_width="wrap_content"

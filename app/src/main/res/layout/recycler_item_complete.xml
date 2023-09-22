@@ -24,7 +24,7 @@
             android:textSize="16sp"
             android:fontFamily="@font/cookierunblack"
             android:layout_marginRight="5dp"
-            android:maxLength="27"/>
+            android:maxLength="25"/>
 
         <ImageButton
             android:layout_width="wrap_content"
