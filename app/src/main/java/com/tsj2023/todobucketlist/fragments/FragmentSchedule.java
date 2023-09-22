@@ -65,7 +65,6 @@ public class FragmentSchedule extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding=FragmentScheduleBinding.inflate(inflater,container,false);
-
         if(requestQueue == null){
             requestQueue = Volley.newRequestQueue(getActivity());
         }
@@ -86,14 +85,7 @@ public class FragmentSchedule extends Fragment{
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationListener, Looper.getMainLooper());
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-
-                }
-            }
-        }); // 위치 정보 얻어오기 끝
+         // 위치 정보 얻어오기 끝
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -104,15 +96,12 @@ public class FragmentSchedule extends Fragment{
         String getTime = simpleDateFormatTime.format(date);
         String getDate = getDay + "\n" + "\n" + getTime;
 
-        binding.ib.setOnClickListener(view -> {
-            binding.tvYmd.setText(getDate);
-        });
+        binding.tvYmd.setText(getDate);
 
         return binding.getRoot();
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        CurrentWeatherCall();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -122,12 +111,14 @@ public class FragmentSchedule extends Fragment{
 
             latitude=location.getLatitude();
             longitude=location.getLongitude();
+            currentWeatherCall();
+            fusedLocationProviderClient.removeLocationUpdates(this);
 
         }
     };
 
-    private void CurrentWeatherCall(){
-        String url="https://api.openweathermap.org/data/2.5/weather?lat="+longitude+"&lon="+latitude+"&appid=3c3ff7ec56db1eea182567887246e6b5";
+    public void currentWeatherCall(){
+        String url="https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=3c3ff7ec56db1eea182567887246e6b5";
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @SuppressLint("SetTextI18n")
             @Override
