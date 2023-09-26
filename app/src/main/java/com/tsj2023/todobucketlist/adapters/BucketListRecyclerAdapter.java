@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +42,17 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
         holder.tv.setText(bucketlistItem.msg);
         holder.cb.setChecked(bucketlistItem.cheked);
 
+        holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (holder.cb.isChecked()==true){
+                    holder.iv.setVisibility(View.VISIBLE);
+                }else {
+                    holder.iv.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -52,12 +65,14 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
         RecyclerItemBucketlistBinding binding;
         TextView tv;
         CheckBox cb;
+        ImageView iv;
 
         public VH(@NonNull View itemView) {
             super(itemView);
             binding=RecyclerItemBucketlistBinding.bind(itemView);
             tv=binding.tvRecyclerItemBucketlist;
             cb=binding.cbRecyclerItemBucketlist;
+            iv=binding.bucketlistStamp;
         }
     }
 }

@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/bucketlist_stamp"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:src="@drawable/complete_removebg"
             android:visibility="invisible"/>
 
@@ -36,7 +36,8 @@
             android:id="@+id/cb_recycler_item_bucketlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

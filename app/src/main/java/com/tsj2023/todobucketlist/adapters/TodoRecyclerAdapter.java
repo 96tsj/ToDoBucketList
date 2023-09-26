@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +46,17 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
         holder.tv.setText(todoItem.msg);
         holder.cb.setChecked(todoItem.cheked);
 
+        holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (holder.cb.isChecked()==true){
+                    holder.iv.setVisibility(View.VISIBLE);
+                }else {
+                    holder.iv.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -57,6 +70,8 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
         TextView tv;
         CheckBox cb;
 
+        ImageView iv;
+
 
 
         public VH(@NonNull View itemView) {
@@ -64,6 +79,7 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
             binding=RecyclerItemTodoBinding.bind(itemView);
             tv=binding.tvRecyclerItemTodo;
             cb=binding.cbRecyclerItemTodo;
+            iv=binding.todoStamp;
 
 
         }

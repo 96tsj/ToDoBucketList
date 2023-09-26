@@ -42,6 +42,8 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
         holder.tv.setText(completeItem.title);
         holder.iv.setImageResource(Integer.parseInt(completeItem.img));
 
+
+
     }
 
     @Override
