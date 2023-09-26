@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.telephony.CarrierConfigManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -23,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -44,6 +47,8 @@ import com.tsj2023.todobucketlist.data.BucketlistItem;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.FragmentBucketlistBinding;
 import com.tsj2023.todobucketlist.databinding.FragmentTodoBinding;
+import com.tsj2023.todobucketlist.databinding.RecyclerItemBucketlistBinding;
+import com.tsj2023.todobucketlist.databinding.RecyclerItemTodoBinding;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -54,36 +59,18 @@ public class FragmentBucketList extends Fragment {
     PieChart pieChart;
     ArrayList<BucketlistItem> bucketlistItems = new ArrayList<>();
     BucketListRecyclerAdapter adapter;
+    boolean isCompleted = false;
+    RecyclerItemBucketlistBinding binding2;
+
+
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentBucketlistBinding.inflate(inflater, container, false);
-
+        binding2 = RecyclerItemBucketlistBinding.inflate(getLayoutInflater(), container, false);
         binding.fabBucketlist.setOnClickListener(view -> clickfab());
-
-        pieChart=binding.chart;
-        ArrayList<PieEntry> dataValue=new ArrayList<PieEntry>();
-
-        dataValue.add(new PieEntry(1,"달성완료"));
-        dataValue.add(new PieEntry(2,"도전중"));
-        PieDataSet dataSet = new PieDataSet(dataValue, "");
-
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        Description description = new Description();
-        description.setText("버킷리스트 달성률"); //라벨
-        description.setTextSize(15);
-        description.setXOffset(20);
-        pieChart.setDescription(description);
-
-        PieData pieData = new PieData(dataSet);
-        pieChart.setData(pieData);
-        pieChart.setEntryLabelTextSize(10);
-        pieChart.invalidate();
 
         return binding.getRoot();
     }
@@ -91,6 +78,14 @@ public class FragmentBucketList extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapter=new BucketListRecyclerAdapter(getContext(),bucketlistItems);
+        adapter.setOnItemCheckedChangedListener(new BucketListRecyclerAdapter.OnItemCheckedChangedListener() {
+            @Override
+            public void onItemCheckedChanged(BucketlistItem item, boolean isChecked) {
+                if (isChecked){
+                    updatePieChart();
+                }
+            }
+        });
         binding.bucketlistRecyclerView.setAdapter(adapter);
 
     }
@@ -108,8 +103,9 @@ public class FragmentBucketList extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String s= editTextBucket.getEditText().getText().toString();
                 if (!TextUtils.isEmpty(s)){
+
                     bucketlistItems.add(new BucketlistItem(s,false));
-                    adapter.notifyDataSetChanged();
+                    updatePieChart();
                 }
             }
         });
@@ -123,7 +119,47 @@ public class FragmentBucketList extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+
     }
 
+    private void updatePieChart() {
+
+        ArrayList<PieEntry> dataValue = new ArrayList<PieEntry>();
+
+        // Count completed items
+        int completedCount = 0;
+        for (BucketlistItem item : bucketlistItems) {
+            if (item.isChecked()) {
+                completedCount++;
+            }
+        }
+
+        pieChart=binding.chart;
+
+        dataValue.add(new PieEntry(completedCount, "달성완료"));
+        dataValue.add(new PieEntry(bucketlistItems.size() - completedCount, "도전중"));
+
+        PieDataSet dataSet = new PieDataSet(dataValue, "");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        dataSet.setValueTextSize(15);
+        dataSet.setValueTextColor(Color.rgb(00f,00f,99f));
+
+        Description description = new Description();
+        description.setText("버킷리스트 달성률"); // 라벨
+        description.setTextSize(15);
+        description.setXOffset(20);
+        pieChart.setDescription(description);
+
+        PieData pieData = new PieData(dataSet);
+        pieChart.setData(pieData);
+        pieChart.setEntryLabelTextSize(10);
+        pieData.notifyDataChanged();
+        pieChart.invalidate(); // 그래프 갱신
+
+        Log.d("update s",completedCount+"");
+
+    }
 
 }

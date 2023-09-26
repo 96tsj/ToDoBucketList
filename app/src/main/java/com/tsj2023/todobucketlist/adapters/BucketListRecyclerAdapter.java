@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,19 +41,38 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
     public void onBindViewHolder(@NonNull VH holder, int position) {
         BucketlistItem bucketlistItem = bucketlistItems.get(position);
         holder.tv.setText(bucketlistItem.msg);
-        holder.cb.setChecked(bucketlistItem.cheked);
+        holder.cb.setChecked(bucketlistItem.checked);
 
         holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (holder.cb.isChecked()==true){
+
+                if (holder.cb.isChecked()){
                     holder.iv.setVisibility(View.VISIBLE);
                 }else {
                     holder.iv.setVisibility(View.INVISIBLE);
                 }
+
+                bucketlistItem.setChecked(b);
+
+                if (listener!=null){
+                    listener.onItemCheckedChanged(bucketlistItem,b);
+                }
             }
         });
 
+    }
+
+    // 버킷리스트 항목의 체크 상태 변경 리스너 인터페이스 정의
+    public interface OnItemCheckedChangedListener {
+        void onItemCheckedChanged(BucketlistItem item, boolean isChecked);
+    }
+
+    private OnItemCheckedChangedListener listener;
+
+    // 리스너 설정 메서드
+    public void setOnItemCheckedChangedListener(OnItemCheckedChangedListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -75,4 +95,5 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
             iv=binding.bucketlistStamp;
         }
     }
+
 }

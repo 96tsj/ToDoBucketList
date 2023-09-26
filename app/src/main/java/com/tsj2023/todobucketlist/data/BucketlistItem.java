@@ -3,13 +3,19 @@ package com.tsj2023.todobucketlist.data;
 public class BucketlistItem {
 
     public String msg;
-    public boolean cheked;
+    public boolean checked;
 
-    public BucketlistItem(String msg, boolean cheked) {
+    public BucketlistItem(String msg, boolean checked) {
         this.msg = msg;
-        this.cheked = cheked;
+        this.checked = checked;
     }
 
     public BucketlistItem() {
+    }
+    public boolean isChecked(){
+        return checked;
+    }
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

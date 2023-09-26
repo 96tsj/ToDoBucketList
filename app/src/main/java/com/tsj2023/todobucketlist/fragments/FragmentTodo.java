@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.adapters.TodoRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.DialogAddTodoBinding;
@@ -29,6 +32,10 @@ public class FragmentTodo extends Fragment{
     DialogAddTodoBinding binding2;
     TodoRecyclerAdapter adapter;
     TextInputLayout textInputLayout;
+    String todoText = "사용자가 입력한 할 일";
+    boolean isChecked = false;
+    String category = "오늘의할일";
+    TodoItem todoItem = new TodoItem(todoText,isChecked,category);
 
     @Nullable
     @Override
@@ -63,6 +70,7 @@ public class FragmentTodo extends Fragment{
                     // This block is responsible for checking if edittext is empty and carrying out the action
                     todoItems.add(new TodoItem(a, false));
                     adapter.notifyDataSetChanged();
+                    //((MainActivity) requireActivity()).saveTode(todoItem);
                 }
             }
         });
