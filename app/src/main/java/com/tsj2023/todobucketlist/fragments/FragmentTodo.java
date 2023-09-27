@@ -51,6 +51,8 @@ public class FragmentTodo extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         adapter = new TodoRecyclerAdapter(getContext(),todoItems);
         binding.todoRecyclerView.setAdapter(adapter);
+
+
     }
 
     void clickfab(){
@@ -61,16 +63,21 @@ public class FragmentTodo extends Fragment{
         // DialogAddTodoBinding으로부터 EditText를 참조합니다.
         TextInputLayout editTextTodo = dialogView.findViewById(R.id.text_input_layout_todo);
 
+
+
         builder.setView(dialogView);
+
         builder.setPositiveButton("등록", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String a = editTextTodo.getEditText().getText().toString();
+                TodoItem newTodoItem = new TodoItem(a, false);
+
                 if (!TextUtils.isEmpty(a)) {
-                    // This block is responsible for checking if edittext is empty and carrying out the action
-                    todoItems.add(new TodoItem(a, false));
+                    todoItems.add(newTodoItem);
                     adapter.notifyDataSetChanged();
-                    //((MainActivity) requireActivity()).saveTode(todoItem);
+                    ((MainActivity) requireActivity()).insertTodoItem(newTodoItem);
+                    ((MainActivity) requireActivity()).loadTodoItemsFromDatabase();
                 }
             }
         });
@@ -83,5 +90,6 @@ public class FragmentTodo extends Fragment{
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -86,10 +87,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-private void insertTodoItem(TodoItem todoItem) {
+public void insertTodoItem(TodoItem todoItem) {
     ContentValues values = new ContentValues();
     values.put("msg", todoItem.msg);
-    values.put("checked", todoItem.cheked ? 1 : 0);
+    values.put("checked", todoItem.checked ? 1 : 0);
     values.put("category", todoItem.category);
 
     long newRowId = db.insert("todo_bucket_list", null, values);
@@ -102,5 +103,27 @@ private void insertTodoItem(TodoItem todoItem) {
         // 성공 처리 코드 작성
     }
 }
+    public void loadTodoItemsFromDatabase() {
+        Cursor cursor = db.query("todo_bucket_list", null, null, null, null, null, "id ASC"); // ID 오름차순으로 정렬
+
+        if (cursor != null) {
+            int idColumnIndex = cursor.getColumnIndex("id");
+            int msgColumnIndex = cursor.getColumnIndex("msg");
+            int checkedColumnIndex = cursor.getColumnIndex("checked");
+            int categoryColumnIndex = cursor.getColumnIndex("category");
+
+            while (cursor.moveToNext()) {
+                long id = cursor.getLong(idColumnIndex);
+                String msg = cursor.getString(msgColumnIndex);
+                int checked = cursor.getInt(checkedColumnIndex);
+                String category = cursor.getString(categoryColumnIndex);
+                boolean isChecked = checked == 1;
+
+                TodoItem todoItem = new TodoItem(id, msg, isChecked, category);
+                todoItems.add(todoItem);
+            }
+            cursor.close();
+        }
+    }
 
 }

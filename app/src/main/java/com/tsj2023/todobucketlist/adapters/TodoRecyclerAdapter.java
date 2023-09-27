@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.adapters;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.data.DatabaseHelper;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.RecyclerItemTodoBinding;
 
@@ -41,18 +43,30 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        TodoItem todoItem = todoItems.get(position);
+        //체크박스 값 변경불가를 위해 final로 변경
+       final TodoItem todoItem = todoItems.get(position);
 
         holder.tv.setText(todoItem.msg);
-        holder.cb.setChecked(todoItem.cheked);
+        holder.cb.setChecked(todoItem.checked);
+
+        //체크박스 리스너 초기화
+        holder.cb.setOnCheckedChangeListener(null);
+
+        holder.cb.setChecked(todoItem.getSelected());
 
         holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (holder.cb.isChecked()==true){
                     holder.iv.setVisibility(View.VISIBLE);
+                    holder.cb.setChecked(true);
+                    todoItem.setSelected(compoundButton.isChecked());
+
                 }else {
                     holder.iv.setVisibility(View.INVISIBLE);
+                    holder.cb.setChecked(false);
+                    todoItem.setSelected(compoundButton.isChecked());
+
                 }
             }
         });

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FragmentTodo">
+    tools:context=".fragments.FragmentTodo"
+    android:background="@drawable/pinkload">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerHorizontal="true"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bucketlist_recycler_view"
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
-        android:layout_below="@+id/chart"/>
+        android:layout_below="@+id/chart" />
     
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_bucketlist"
