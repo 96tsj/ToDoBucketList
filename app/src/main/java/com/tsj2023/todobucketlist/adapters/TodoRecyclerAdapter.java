@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.data.DatabaseHelper;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.RecyclerItemTodoBinding;
@@ -68,6 +70,7 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
                     todoItem.setSelected(compoundButton.isChecked());
 
                 }
+                ((MainActivity) context).updateTodoItem(todoItems.get(position));
             }
         });
 
@@ -87,7 +90,6 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
         ImageView iv;
 
 
-
         public VH(@NonNull View itemView) {
             super(itemView);
             binding=RecyclerItemTodoBinding.bind(itemView);
@@ -98,4 +100,5 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
 
         }
     }
+
 }

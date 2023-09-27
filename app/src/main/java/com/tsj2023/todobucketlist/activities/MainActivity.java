@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -103,26 +104,23 @@ public void insertTodoItem(TodoItem todoItem) {
         // 성공 처리 코드 작성
     }
 }
-    public void loadTodoItemsFromDatabase() {
-        Cursor cursor = db.query("todo_bucket_list", null, null, null, null, null, "id ASC"); // ID 오름차순으로 정렬
+    public void updateTodoItem(TodoItem item) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("checked", item.checked ? 1 : 0);
 
-        if (cursor != null) {
-            int idColumnIndex = cursor.getColumnIndex("id");
-            int msgColumnIndex = cursor.getColumnIndex("msg");
-            int checkedColumnIndex = cursor.getColumnIndex("checked");
-            int categoryColumnIndex = cursor.getColumnIndex("category");
+        int rowsUpdated = db.update("todo_bucket_list", values, "id = ?", new String[]{String.valueOf(item.getId())});
+        db.close();
 
-            while (cursor.moveToNext()) {
-                long id = cursor.getLong(idColumnIndex);
-                String msg = cursor.getString(msgColumnIndex);
-                int checked = cursor.getInt(checkedColumnIndex);
-                String category = cursor.getString(categoryColumnIndex);
-                boolean isChecked = checked == 1;
+        if (rowsUpdated > 0) {
+            // 업데이트가 성공적으로 수행되었습니다.
+            Log.d("UpdateTodoItem", "데이터 업데이트 성공");
+        } else {
+            // 업데이트에 실패한 경우
+            Log.e("UpdateTodoItem", "데이터 업데이트 실패");
 
-                TodoItem todoItem = new TodoItem(id, msg, isChecked, category);
-                todoItems.add(todoItem);
-            }
-            cursor.close();
+            // 실패한 경우 토스트 메시지도 표시할 수 있습니다.
+            Toast.makeText(this, "데이터 업데이트에 실패했습니다", Toast.LENGTH_SHORT).show();
         }
     }
 

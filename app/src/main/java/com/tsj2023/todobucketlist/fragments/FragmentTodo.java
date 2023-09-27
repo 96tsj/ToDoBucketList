@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class FragmentTodo extends Fragment{
     boolean isChecked = false;
     String category = "오늘의할일";
     TodoItem todoItem = new TodoItem(todoText,isChecked,category);
+    SQLiteDatabase db;
 
     @Nullable
     @Override
@@ -77,7 +79,6 @@ public class FragmentTodo extends Fragment{
                     todoItems.add(newTodoItem);
                     adapter.notifyDataSetChanged();
                     ((MainActivity) requireActivity()).insertTodoItem(newTodoItem);
-                    ((MainActivity) requireActivity()).loadTodoItemsFromDatabase();
                 }
             }
         });
@@ -90,6 +91,7 @@ public class FragmentTodo extends Fragment{
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 
 }
