@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.FragmentTodo"
-    android:background="@drawable/pinkload">
+    android:background="@color/white">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart"
@@ -19,7 +19,8 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
-        android:layout_below="@+id/chart" />
+        android:layout_below="@+id/chart"
+        android:background="@drawable/pinkload"/>
     
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_bucketlist"

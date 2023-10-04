@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-public void insertTodoItem(TodoItem todoItem) {
+public long insertTodoItem(TodoItem todoItem) {
     ContentValues values = new ContentValues();
     values.put("msg", todoItem.msg);
     values.put("checked", todoItem.checked ? 1 : 0);
@@ -103,14 +103,22 @@ public void insertTodoItem(TodoItem todoItem) {
         // 데이터베이스에 추가 성공한 경우
         // 성공 처리 코드 작성
     }
+    return newRowId;
+
 }
-    public void updateTodoItem(TodoItem item) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+public void updateTodoItem(TodoItem item) {
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    db.beginTransaction();
+
+    try {
         ContentValues values = new ContentValues();
+        //valuew에 checked값 집어넣기
         values.put("checked", item.checked ? 1 : 0);
 
+        Log.d("UpdateDebug", "Before Update - item.checked: " + item.checked);
         int rowsUpdated = db.update("todo_bucket_list", values, "id = ?", new String[]{String.valueOf(item.getId())});
-        db.close();
+        Log.d("UpdateDebug", "After Update - item.getId(): " + item.getId() + ", Rows Updated: " + rowsUpdated);
+
 
         if (rowsUpdated > 0) {
             // 업데이트가 성공적으로 수행되었습니다.
@@ -118,10 +126,17 @@ public void insertTodoItem(TodoItem todoItem) {
         } else {
             // 업데이트에 실패한 경우
             Log.e("UpdateTodoItem", "데이터 업데이트 실패");
-
-            // 실패한 경우 토스트 메시지도 표시할 수 있습니다.
             Toast.makeText(this, "데이터 업데이트에 실패했습니다", Toast.LENGTH_SHORT).show();
         }
+    }catch (Exception e) {
+        Log.e("UpdateTodoItem", "트랜잭션 실패: " + e.getMessage());
+
+    }finally {
+        db.endTransaction();
+        db.close();
     }
+
+    }
+
 
 }

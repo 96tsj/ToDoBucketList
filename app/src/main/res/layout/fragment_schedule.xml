@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FragmentTodo">
+    tools:context=".fragments.FragmentTodo"
+    android:background="@color/white">
 
     <ImageButton
         android:id="@+id/ib"
@@ -63,10 +64,10 @@
         android:fontFamily="@font/cookierunblack"
         android:textStyle="bold"/>
 
-    <com.kizitonwose.calendarview.CalendarView
+    <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="350dp"
         app:cv_scrollMode="paged"
         app:cv_orientation="horizontal"
         app:cv_inDateStyle="none"
@@ -75,6 +76,14 @@
         app:cv_hasBoundaries="false"
         app:cv_dayViewResource="@layout/calendar_day_layout"
         android:layout_below="@+id/ib"/>
+    <TextView
+        android:id="@+id/tv_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/calendarView"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:hint="날짜를 선택후 일정을 입력해보세요."/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_schedule"

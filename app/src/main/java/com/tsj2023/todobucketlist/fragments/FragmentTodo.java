@@ -73,12 +73,16 @@ public class FragmentTodo extends Fragment{
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String a = editTextTodo.getEditText().getText().toString();
-                TodoItem newTodoItem = new TodoItem(a, false);
+                long id = ((MainActivity) requireActivity()).insertTodoItem(new TodoItem(a, false, category));
 
-                if (!TextUtils.isEmpty(a)) {
+                TodoItem newTodoItem = new TodoItem(id,a, false,category);
+
+                if (id !=-1 && !TextUtils.isEmpty(a)) {
+//                    todoItems.add(newTodoItem);
+//                    adapter.notifyDataSetChanged();
+//                    ((MainActivity) requireActivity()).insertTodoItem(newTodoItem);
                     todoItems.add(newTodoItem);
                     adapter.notifyDataSetChanged();
-                    ((MainActivity) requireActivity()).insertTodoItem(newTodoItem);
                 }
             }
         });

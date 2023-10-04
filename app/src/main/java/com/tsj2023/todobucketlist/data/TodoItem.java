@@ -8,9 +8,6 @@ public class TodoItem {
     public boolean isSelected;
     private long id; // 아이템의 고유 ID
 
-    public TodoItem(long id, String msg, boolean isChecked, String category) {
-    }
-
     public boolean getSelected()
     {
         return isSelected;
@@ -28,6 +25,12 @@ public class TodoItem {
     }
 
     public TodoItem(String msg, boolean cheked, String category) {
+        this.msg = msg;
+        this.checked = checked;
+        this.category = category;
+    }
+    public TodoItem(long id, String msg, boolean checked, String category) {
+        this.id = id;
         this.msg = msg;
         this.checked = checked;
         this.category = category;
