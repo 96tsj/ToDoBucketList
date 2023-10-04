@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
         db= dbHelper.getWritableDatabase();
-        TodoItem todoItem=new TodoItem("새로운 할 일",false,"일반");
-        insertTodoItem(todoItem);
+        //TodoItem todoItem=new TodoItem("새로운 할 일",false,"일반");
+        //insertTodoItem(todoItem);
 
-        db=openOrCreateDatabase(TableName,MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS todo_bucket_list(id INTEGER PRIMARY KEY AUTOINCREMENT,msg TEXT,checked INTEGER,category TEXT)");
+//        db=openOrCreateDatabase(TableName,MODE_PRIVATE,null);
+//        db.execSQL("CREATE TABLE IF NOT EXISTS todo_bucket_list(id INTEGER PRIMARY KEY AUTOINCREMENT,msg TEXT,checked INTEGER,category TEXT)");
 
         tabLayout=findViewById(R.id.tab_layout);
         frameLayout=findViewById(R.id.frame_layout);
@@ -133,10 +133,15 @@ public void updateTodoItem(TodoItem item) {
 
     }finally {
         db.endTransaction();
-        db.close();
     }
 
     }
 
+    protected void onDestroy() {
+        super.onDestroy();
+        if (db != null) {
+            db.close();
+        }
 
+    }
 }

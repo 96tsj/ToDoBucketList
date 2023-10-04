@@ -93,7 +93,7 @@
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="105dp"
         android:layout_marginRight="40dp"/>
 
 </RelativeLayout>
