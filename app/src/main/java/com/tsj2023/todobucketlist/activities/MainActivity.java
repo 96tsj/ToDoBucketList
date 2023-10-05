@@ -3,6 +3,7 @@ package com.tsj2023.todobucketlist.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.ContentValues;
@@ -50,11 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
         db= dbHelper.getWritableDatabase();
-        //TodoItem todoItem=new TodoItem("새로운 할 일",false,"일반");
-        //insertTodoItem(todoItem);
-
-//        db=openOrCreateDatabase(TableName,MODE_PRIVATE,null);
-//        db.execSQL("CREATE TABLE IF NOT EXISTS todo_bucket_list(id INTEGER PRIMARY KEY AUTOINCREMENT,msg TEXT,checked INTEGER,category TEXT)");
 
         tabLayout=findViewById(R.id.tab_layout);
         frameLayout=findViewById(R.id.frame_layout);
@@ -116,18 +112,13 @@ public void updateTodoItem(TodoItem item) {
         //valuew에 checked값 집어넣기
         values.put("checked", item.checked ? 1 : 0);
 
-        Log.d("UpdateDebug", "Before Update - item.checked: " + item.checked);
         int rowsUpdated = db.update("todo_bucket_list", values, "id = ?", new String[]{String.valueOf(item.getId())});
-        Log.d("UpdateDebug", "After Update - item.getId(): " + item.getId() + ", Rows Updated: " + rowsUpdated);
-
 
         if (rowsUpdated > 0) {
             // 업데이트가 성공적으로 수행되었습니다.
             db.setTransactionSuccessful();
-            Log.d("UpdateTodoItem", "데이터 업데이트 성공");
         } else {
             // 업데이트에 실패한 경우
-            Log.e("UpdateTodoItem", "데이터 업데이트 실패");
             Toast.makeText(this, "데이터 업데이트에 실패했습니다", Toast.LENGTH_SHORT).show();
         }
     }catch (Exception e) {
@@ -145,5 +136,8 @@ public void updateTodoItem(TodoItem item) {
             db.close();
         }
 
+    }
+    public DatabaseHelper getDbHelper(){
+        return dbHelper;
     }
 }

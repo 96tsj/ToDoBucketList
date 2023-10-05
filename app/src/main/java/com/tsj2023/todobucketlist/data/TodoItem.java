@@ -6,7 +6,7 @@ public class TodoItem {
     public boolean checked;
     public String category = "오늘의 할일";
     public boolean isSelected;
-    private long id; // 아이템의 고유 ID
+    public long id; // 아이템의 고유 ID
 
     public boolean getSelected()
     {
@@ -68,4 +68,5 @@ public class TodoItem {
     public void setCategory(String category) {
         this.category = category;
     }
+
 }
