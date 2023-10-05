@@ -26,10 +26,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapter.VH> {
-    private boolean isChecked;
-
     Context context;
-
     ArrayList<TodoItem> todoItems = new ArrayList<>();
 
     public TodoRecyclerAdapter(Context context, ArrayList<TodoItem> todoItems) {
@@ -48,10 +45,10 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         //체크박스 값 변경불가를 위해 final로 변경
-        TodoItem todoItem = todoItems.get(position);
+        final TodoItem todoItem = todoItems.get(position);
 
         holder.tv.setText(todoItem.msg);
-        holder.cb.setChecked(isChecked);
+        holder.cb.setChecked(todoItem.checked);
 
         //체크박스 리스너 초기화
         holder.cb.setOnCheckedChangeListener(null);
@@ -62,16 +59,16 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (holder.cb.isChecked()==true){
                     holder.iv.setVisibility(View.VISIBLE);
-                    isChecked = true;
+                    todoItem.setChecked(true);
                     Log.d("Check",""+holder.cb.isChecked());
 
                 }else {
                     holder.iv.setVisibility(View.INVISIBLE);
-                    isChecked = false;
+                    todoItem.setChecked(false);
                     Log.d("Check2",""+holder.cb.isChecked());
 
                 }
-                todoItem.setChecked(isChecked);
+                todoItem.setChecked(b);
                 //메인에서 메소드 업데이트 호출
                 ((MainActivity) context).updateTodoItem(todoItems.set(position,todoItem));
             }

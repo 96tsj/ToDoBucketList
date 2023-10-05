@@ -108,8 +108,9 @@ public long insertTodoItem(TodoItem todoItem) {
 }
 public void updateTodoItem(TodoItem item) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.beginTransaction();
 
+    //db transaction시작
+    db.beginTransaction();
     try {
         ContentValues values = new ContentValues();
         //valuew에 checked값 집어넣기
@@ -122,6 +123,7 @@ public void updateTodoItem(TodoItem item) {
 
         if (rowsUpdated > 0) {
             // 업데이트가 성공적으로 수행되었습니다.
+            db.setTransactionSuccessful();
             Log.d("UpdateTodoItem", "데이터 업데이트 성공");
         } else {
             // 업데이트에 실패한 경우
