@@ -1,9 +1,11 @@
 package com.tsj2023.todobucketlist.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +16,15 @@ import com.tsj2023.todobucketlist.adapters.CompleteRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.CompleteItem;
 import com.tsj2023.todobucketlist.databinding.FragmentCompleteBinding;
 import com.tsj2023.todobucketlist.databinding.FragmentTodoBinding;
+import com.tsj2023.todobucketlist.network.RetrofitHelper;
+import com.tsj2023.todobucketlist.network.RetrofitService;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class FragmentComplete extends Fragment{
 
@@ -32,10 +41,39 @@ public class FragmentComplete extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        completeItems.add(new CompleteItem("",R.drawable.app_logo_my+""));
+        loadData();
+    }
 
-        adapter=new CompleteRecyclerAdapter(getContext(),completeItems);
-        binding.completeRecyclerView.setAdapter(adapter);
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
 
+    void loadData(){
+        Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
+        RetrofitService retrofitService=retrofit.create(RetrofitService.class);
+        Call<ArrayList<CompleteItem>> call=retrofitService.loadDataFromServer();
+        call.enqueue(new Callback<ArrayList<CompleteItem>>() {
+            @Override
+            public void onResponse(Call<ArrayList<CompleteItem>> call, Response<ArrayList<CompleteItem>> response) {
+
+                completeItems.clear();
+                Log.d("내용확인",""+response.body());
+
+                ArrayList<CompleteItem> items=response.body();
+                for (CompleteItem item : items){
+                    Log.d("내용확인2",item+"");
+                    completeItems.add(0,item);
+                }
+                CompleteRecyclerAdapter adapter=new CompleteRecyclerAdapter(getContext(),completeItems);
+                binding.completeRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<CompleteItem>> call, Throwable t) {
+                Toast.makeText(getContext(), "error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("Json",t.getMessage()+"");
+            }
+        });
     }
 }

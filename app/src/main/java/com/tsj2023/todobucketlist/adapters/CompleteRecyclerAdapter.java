@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,8 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
         CompleteItem completeItem=completeItems.get(position);
 
         holder.tv.setText(completeItem.title);
-        holder.iv.setImageResource(Integer.parseInt(completeItem.img));
+        String url= "http://tsj123.dothome.co.kr/TodoBucketlist/" + completeItem.img;
+        Glide.with(context).load(url).into(holder.iv);
 
         holder.ib.setOnClickListener(new View.OnClickListener() {
             @Override
