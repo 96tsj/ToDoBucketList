@@ -32,9 +32,10 @@ public class FragmentComplete extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        completeItems.add(new CompleteItem("2023-98-12 공부 5만시간하기 5번 반복하면",R.drawable.app_logo_my+""));
+        completeItems.add(new CompleteItem("",R.drawable.app_logo_my+""));
 
         adapter=new CompleteRecyclerAdapter(getContext(),completeItems);
         binding.completeRecyclerView.setAdapter(adapter);
+
     }
 }

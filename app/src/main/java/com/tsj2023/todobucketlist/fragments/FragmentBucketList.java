@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,10 +63,7 @@ public class FragmentBucketList extends Fragment {
     BucketListRecyclerAdapter adapter;
     boolean isCompleted = false;
     RecyclerItemBucketlistBinding binding2;
-
-
-
-
+    MainActivity activity;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,20 +73,34 @@ public class FragmentBucketList extends Fragment {
 
         return binding.getRoot();
     }
+
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        // context를 MainActivity로 형변환하고 activity 변수에 할당
+        if (context instanceof MainActivity) {
+            activity = (MainActivity) context;
+        }
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter=new BucketListRecyclerAdapter(getContext(),bucketlistItems);
-        adapter.setOnItemCheckedChangedListener(new BucketListRecyclerAdapter.OnItemCheckedChangedListener() {
-            @Override
-            public void onItemCheckedChanged(BucketlistItem item, boolean isChecked) {
-                if (isChecked){
-                    updatePieChart();
-                }
-            }
-        });
-        binding.bucketlistRecyclerView.setAdapter(adapter);
 
+        if (activity != null){
+            adapter=new BucketListRecyclerAdapter(activity,bucketlistItems);
+            adapter.setOnItemCheckedChangedListener(new BucketListRecyclerAdapter.OnItemCheckedChangedListener() {
+                @Override
+                public void onItemCheckedChanged(BucketlistItem item, boolean isChecked) {
+                    if (isChecked){
+                        updatePieChart();
+                    }
+                }
+            });
+            binding.bucketlistRecyclerView.setAdapter(adapter);
+        }else {
+            Toast.makeText(getContext(), "없음", Toast.LENGTH_SHORT).show();
+        }
     }
     void clickfab(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

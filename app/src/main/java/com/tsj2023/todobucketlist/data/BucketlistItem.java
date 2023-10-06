@@ -18,4 +18,12 @@ public class BucketlistItem {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
 }
