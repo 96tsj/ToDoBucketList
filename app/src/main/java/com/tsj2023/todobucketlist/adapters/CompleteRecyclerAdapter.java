@@ -34,10 +34,12 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
     ArrayList<CompleteItem> completeItems = new ArrayList<>();
     String imgPath; //이미지의 실제경로
     RecyclerItemCompleteBinding binding;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
-    public CompleteRecyclerAdapter(Context context, ArrayList<CompleteItem> completeItems) {
+    public CompleteRecyclerAdapter(Context context, ArrayList<CompleteItem> completeItems, ActivityResultLauncher<Intent> imagePickerLauncher) {
         this.context = context;
         this.completeItems = completeItems;
+        this.imagePickerLauncher = imagePickerLauncher;
     }
 
     @NonNull
@@ -59,7 +61,7 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
         holder.ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "123", Toast.LENGTH_SHORT).show();
+                clickSelect();
             }
         });
 
@@ -84,5 +86,10 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
             ib=binding.selectImageBtn;
         }
     }
+    void clickSelect(){
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        imagePickerLauncher.launch(intent);
+    }
+
 
 }

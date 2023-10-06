@@ -1,26 +1,35 @@
 package com.tsj2023.todobucketlist.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.loader.content.CursorLoader;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.adapters.CompleteRecyclerAdapter;
 import com.tsj2023.todobucketlist.adapters.ViewPaserAdapter;
 import com.tsj2023.todobucketlist.data.DatabaseHelper;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.ActivityMainBinding;
+import com.tsj2023.todobucketlist.databinding.RecyclerItemCompleteBinding;
 import com.tsj2023.todobucketlist.fragments.FragmentBucketList;
 import com.tsj2023.todobucketlist.fragments.FragmentComplete;
 import com.tsj2023.todobucketlist.fragments.FragmentSchedule;
@@ -41,11 +50,14 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase db;
     TodoItem todoItem;
     DatabaseHelper dbHelper;
+    RecyclerItemCompleteBinding binding2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityMainBinding.inflate(getLayoutInflater());
+        binding2=RecyclerItemCompleteBinding.inflate(getLayoutInflater());
         String TableName = "myapp";
         setContentView(binding.getRoot());
 
@@ -140,4 +152,5 @@ public void updateTodoItem(TodoItem item) {
     public DatabaseHelper getDbHelper(){
         return dbHelper;
     }
+
 }

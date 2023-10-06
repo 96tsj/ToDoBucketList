@@ -1,21 +1,33 @@
 package com.tsj2023.todobucketlist.fragments;
 
+import static android.app.Activity.RESULT_CANCELED;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.CursorLoader;
 
+import com.bumptech.glide.Glide;
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.adapters.CompleteRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.CompleteItem;
 import com.tsj2023.todobucketlist.databinding.FragmentCompleteBinding;
 import com.tsj2023.todobucketlist.databinding.FragmentTodoBinding;
+import com.tsj2023.todobucketlist.databinding.RecyclerItemCompleteBinding;
 import com.tsj2023.todobucketlist.network.RetrofitHelper;
 import com.tsj2023.todobucketlist.network.RetrofitService;
 
@@ -30,12 +42,16 @@ public class FragmentComplete extends Fragment{
 
     ArrayList<CompleteItem> completeItems = new ArrayList<>();
     FragmentCompleteBinding binding;
+    RecyclerItemCompleteBinding binding2;
     CompleteRecyclerAdapter adapter;
+    String imgPath;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding=FragmentCompleteBinding.inflate(inflater,container,false);
+        binding2=RecyclerItemCompleteBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }
     @Override
@@ -65,7 +81,7 @@ public class FragmentComplete extends Fragment{
                     Log.d("내용확인2",item+"");
                     completeItems.add(0,item);
                 }
-                CompleteRecyclerAdapter adapter=new CompleteRecyclerAdapter(getContext(),completeItems);
+                CompleteRecyclerAdapter adapter=new CompleteRecyclerAdapter(getContext(),completeItems,resultLauncher);
                 binding.completeRecyclerView.setAdapter(adapter);
             }
 
@@ -75,5 +91,28 @@ public class FragmentComplete extends Fragment{
                 Log.e("Json",t.getMessage()+"");
             }
         });
+    }
+
+    ActivityResultLauncher<Intent> resultLauncher= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode()==RESULT_CANCELED) return;
+
+        Intent intent= result.getData();
+        Uri uri= intent.getData();
+        Glide.with(this).load(uri).into(binding2.ivRecyclerItemComplete);
+
+        imgPath= getRealPathFromUri(uri);
+        //new AlertDialog.Builder(this).setMessage(imgPath).create().show();
+    });
+
+    //Uri -- > 절대경로로 바꿔서 리턴시켜주는 메소드
+    String getRealPathFromUri(Uri uri){
+        String[] proj= {MediaStore.Images.Media.DATA};
+        CursorLoader loader= new CursorLoader(getContext(), uri, proj, null, null, null);
+        Cursor cursor= loader.loadInBackground();
+        int column_index= cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result= cursor.getString(column_index);
+        cursor.close();
+        return  result;
     }
 }
