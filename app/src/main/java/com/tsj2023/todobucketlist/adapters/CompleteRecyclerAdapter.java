@@ -1,10 +1,6 @@
 package com.tsj2023.todobucketlist.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,32 +10,44 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.tsj2023.todobucketlist.R;
 import com.tsj2023.todobucketlist.data.CompleteItem;
 import com.tsj2023.todobucketlist.databinding.RecyclerItemCompleteBinding;
+import com.tsj2023.todobucketlist.fragments.FragmentComplete;
+import com.tsj2023.todobucketlist.network.RetrofitHelper;
+import com.tsj2023.todobucketlist.network.RetrofitService;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecyclerAdapter.VH> {
 
     Context context;
     ArrayList<CompleteItem> completeItems = new ArrayList<>();
-    String imgPath; //이미지의 실제경로
-    RecyclerItemCompleteBinding binding;
-    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    FragmentComplete fragmentComplete;
+    int number;
+    String imgPath;
 
-    public CompleteRecyclerAdapter(Context context, ArrayList<CompleteItem> completeItems, ActivityResultLauncher<Intent> imagePickerLauncher) {
+
+    public CompleteRecyclerAdapter(Context context, ArrayList<CompleteItem> completeItems, FragmentComplete fragmentComplete) {
         this.context = context;
         this.completeItems = completeItems;
-        this.imagePickerLauncher = imagePickerLauncher;
+        this.fragmentComplete = fragmentComplete;
     }
 
     @NonNull
@@ -54,17 +62,19 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
     public void onBindViewHolder(@NonNull VH holder, int position) {
         CompleteItem completeItem=completeItems.get(position);
 
-        holder.tv.setText(completeItem.title);
-        String url= "http://tsj123.dothome.co.kr/TodoBucketlist/" + completeItem.img;
-        Glide.with(context).load(url).into(holder.iv);
+        holder.tv.setText(completeItem.date+" "+completeItem.title);
+        String url= "http://tsj123.dothome.co.kr/TodoBucketlist/" + completeItem.getFile();
+        Log.d("CompleteURL",url);
+        number=completeItem.getNo();
 
-        holder.ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickSelect();
-            }
-        });
+        Glide.with(context).load(url).error(R.drawable.app_logo_my).into(holder.binding.ivRecyclerItemComplete);
 
+        holder.ib.setOnClickListener(view -> fragmentComplete.onImagePickerRequested());
+
+        if (imgPath!=null){
+            updateComplete();
+        }else {
+        }
     }
 
     @Override
@@ -86,10 +96,44 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
             ib=binding.selectImageBtn;
         }
     }
-    void clickSelect(){
-        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-        imagePickerLauncher.launch(intent);
+    void updateComplete(){
+        Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
+        RetrofitService retrofitService= retrofit.create(RetrofitService.class);
+
+        int no = number;
+
+        if (no!=0){
+            //String데이터들
+            Map<String,String> dataPart=new HashMap<>();
+            dataPart.put("no",no+"");
+
+            MultipartBody.Part filePart= null;
+            if(imgPath!=null){
+                File file= new File(imgPath);
+                RequestBody body= RequestBody.create(MediaType.parse("image/*"), file);
+                filePart= MultipartBody.Part.createFormData("img", file.getName(), body);
+            }
+
+            Call<String> call= retrofitService.postDataToServer(dataPart,filePart);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String s= response.body();
+                    Toast.makeText(context, "업로드 성공 : ", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("Retrofit Error", t.getMessage());
+                    Toast.makeText(context, "업로드 실패: ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(context, "no=null", Toast.LENGTH_SHORT).show();
+        }
     }
-
-
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
 }

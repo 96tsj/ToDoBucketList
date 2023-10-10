@@ -1,21 +1,24 @@
 package com.tsj2023.todobucketlist.data;
 
+import java.io.File;
+
 public class CompleteItem {
     int no;
     public String title;
-    public String img;
-    String date;
+    public String file;
+    public String date;
+    private String imgPath;
 
-    public CompleteItem(int no, String title, String img, String date) {
+    public CompleteItem(int no, String title, String file, String date) {
         this.no = no;
         this.title = title;
-        this.img = img;
+        this.file = file;
         this.date = date;
     }
 
-    public CompleteItem(String title, String img) {
+    public CompleteItem(String title, String file) {
         this.title = title;
-        this.img = img;
+        this.file = file;
     }
 
     public CompleteItem() {
@@ -24,4 +27,19 @@ public class CompleteItem {
     public CompleteItem(String title) {
         this.title = title;
     }
+    public int getNo() {
+        return no;
+    }
+
+    public String getFile(){
+        return file;
+    }
+
+    public void setFile(String file){
+        this.file = file;
+    }
+
+    public String getImgPath(){return imgPath;}
+    public void setImgPath(String imgPath) {this.imgPath = imgPath;}
+
 }

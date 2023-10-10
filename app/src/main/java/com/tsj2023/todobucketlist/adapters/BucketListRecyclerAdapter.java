@@ -38,7 +38,6 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
 
     AppCompatActivity activity; // Activity 참조를 저장하기 위한 필드
     ArrayList<BucketlistItem> bucketlistItems=new ArrayList<>();
-
     private BucketlistItem lastCheckedItem;
 
 
@@ -124,22 +123,11 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
         Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
         RetrofitService retrofitService= retrofit.create(RetrofitService.class);
 
-
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 1을 더함
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-//        String title=null;
-//
-//
-//        for (BucketlistItem item : bucketlistItems) {
-//            if (item.isChecked()) {
-//                String msg = item.getMsg();
-//                // msg를 사용하여 원하는 작업 수행
-//                title=msg;
-//            }
-//        }
         String title = lastCheckedItem.getMsg();
         // 연월일을 원하는 형식으로 포맷
         String date = String.format("%04d-%02d-%02d", year, month, dayOfMonth);
@@ -160,7 +148,6 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
                 public void onResponse(Call<String> call, Response<String> response) {
                     String s= response.body();
                     Toast.makeText(activity, "응답 : "+s, Toast.LENGTH_SHORT).show();
-                    //Log.d("retrofit response","응답 : "+s);
                 }
 
                 @Override

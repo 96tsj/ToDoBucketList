@@ -20,14 +20,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.loader.content.CursorLoader;
 
-import com.bumptech.glide.Glide;
-import com.tsj2023.todobucketlist.R;
-import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.adapters.CompleteRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.CompleteItem;
 import com.tsj2023.todobucketlist.databinding.FragmentCompleteBinding;
-import com.tsj2023.todobucketlist.databinding.FragmentTodoBinding;
-import com.tsj2023.todobucketlist.databinding.RecyclerItemCompleteBinding;
 import com.tsj2023.todobucketlist.network.RetrofitHelper;
 import com.tsj2023.todobucketlist.network.RetrofitService;
 
@@ -38,20 +33,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class FragmentComplete extends Fragment{
+public class FragmentComplete extends Fragment {
 
     ArrayList<CompleteItem> completeItems = new ArrayList<>();
     FragmentCompleteBinding binding;
-    RecyclerItemCompleteBinding binding2;
     CompleteRecyclerAdapter adapter;
     String imgPath;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding=FragmentCompleteBinding.inflate(inflater,container,false);
-        binding2=RecyclerItemCompleteBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }
     @Override
@@ -74,14 +66,12 @@ public class FragmentComplete extends Fragment{
             public void onResponse(Call<ArrayList<CompleteItem>> call, Response<ArrayList<CompleteItem>> response) {
 
                 completeItems.clear();
-                Log.d("내용확인",""+response.body());
 
                 ArrayList<CompleteItem> items=response.body();
                 for (CompleteItem item : items){
-                    Log.d("내용확인2",item+"");
                     completeItems.add(0,item);
                 }
-                CompleteRecyclerAdapter adapter=new CompleteRecyclerAdapter(getContext(),completeItems,resultLauncher);
+                adapter=new CompleteRecyclerAdapter(getContext(),completeItems,FragmentComplete.this);
                 binding.completeRecyclerView.setAdapter(adapter);
             }
 
@@ -98,9 +88,9 @@ public class FragmentComplete extends Fragment{
 
         Intent intent= result.getData();
         Uri uri= intent.getData();
-        Glide.with(this).load(uri).into(binding2.ivRecyclerItemComplete);
-
         imgPath= getRealPathFromUri(uri);
+        onImageSelected(imgPath);
+
         //new AlertDialog.Builder(this).setMessage(imgPath).create().show();
     });
 
@@ -115,4 +105,16 @@ public class FragmentComplete extends Fragment{
         cursor.close();
         return  result;
     }
+    public void onImagePickerRequested() {
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
+    }
+    public void onImageSelected(String selectedImgPath) {
+        imgPath = selectedImgPath;
+        Log.d("FragmentComplete", "imgPath updated: " + imgPath); // 로그 추가
+
+        adapter.setImgPath(imgPath); // 어댑터의 imgPath를 업데이트
+        adapter.notifyDataSetChanged(); // 어댑터에 변경 사항을 알립니다.
+    }
 }
+
