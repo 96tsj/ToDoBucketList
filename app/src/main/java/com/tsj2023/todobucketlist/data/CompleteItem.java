@@ -1,5 +1,7 @@
 package com.tsj2023.todobucketlist.data;
 
+import android.util.Log;
+
 import java.io.File;
 
 public class CompleteItem {
@@ -9,11 +11,12 @@ public class CompleteItem {
     public String date;
     private String imgPath;
 
-    public CompleteItem(int no, String title, String file, String date) {
+    public CompleteItem(int no, String title, String file, String date, String imgPath) {
         this.no = no;
         this.title = title;
         this.file = file;
         this.date = date;
+        this.imgPath = null;
     }
 
     public CompleteItem(String title, String file) {
@@ -40,6 +43,8 @@ public class CompleteItem {
     }
 
     public String getImgPath(){return imgPath;}
-    public void setImgPath(String imgPath) {this.imgPath = imgPath;}
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
 
 }

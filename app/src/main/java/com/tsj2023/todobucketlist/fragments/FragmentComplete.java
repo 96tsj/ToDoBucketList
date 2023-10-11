@@ -39,6 +39,7 @@ public class FragmentComplete extends Fragment {
     FragmentCompleteBinding binding;
     CompleteRecyclerAdapter adapter;
     String imgPath;
+    private CompleteItem selectedCompleteItem; // 선택한 아이템 저장
 
     @Nullable
     @Override
@@ -109,12 +110,22 @@ public class FragmentComplete extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
         resultLauncher.launch(intent);
     }
+    public void setSelectedCompleteItem(CompleteItem item) {
+        selectedCompleteItem = item;
+    }
     public void onImageSelected(String selectedImgPath) {
         imgPath = selectedImgPath;
-        Log.d("FragmentComplete", "imgPath updated: " + imgPath); // 로그 추가
+        Log.d("FragmentComplete", "imgPath updated: " + selectedImgPath); // 로그 추가
 
-        adapter.setImgPath(imgPath); // 어댑터의 imgPath를 업데이트
-        adapter.notifyDataSetChanged(); // 어댑터에 변경 사항을 알립니다.
+        if (selectedCompleteItem != null){
+            selectedCompleteItem.setImgPath(imgPath);
+            Log.d("selectedCompleteItem",selectedCompleteItem+"");
+            adapter.notifyDataSetChanged(); // 어댑터에 변경 사항을 알립니다.
+        }else {
+            Toast.makeText(getContext(), "setSelectedCompleteItem = null", Toast.LENGTH_SHORT).show();
+            Log.d("selectedCompleteItem",selectedCompleteItem+"");
+        }
     }
+
 }
 
