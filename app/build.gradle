@@ -59,7 +59,8 @@ dependencies {
     implementation 'com.google.firebase:protolite-well-known-types:18.0.0'
 
     // Kakao SDK
-    implementation "com.kakao.sdk:v2-user:2.16.0" // 카카오 로그인
+    implementation "com.kakao.sdk:v2-user:2.16.0"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'// 카카오 로그인
 
     // materialcalendarview
 

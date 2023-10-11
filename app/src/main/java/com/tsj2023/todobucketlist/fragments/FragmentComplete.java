@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.loader.content.CursorLoader;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.tsj2023.todobucketlist.adapters.CompleteRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.CompleteItem;
@@ -45,12 +46,19 @@ public class FragmentComplete extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding=FragmentCompleteBinding.inflate(inflater,container,false);
+
+        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+                binding.refreshLayout.setRefreshing(false);
+            }
+        });
         return binding.getRoot();
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadData();
     }
 
     public void onResume() {
