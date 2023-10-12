@@ -2,7 +2,9 @@ package com.tsj2023.todobucketlist.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.tvBtnNologin.setOnClickListener(view -> {
+            OAuthToken oAuthToken = null;
+            saveTokenToPreference(oAuthToken);
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });
@@ -51,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
                 }else {
                     Toast.makeText(LoginActivity.this, "카카오로그인 성공", Toast.LENGTH_SHORT).show();
 
+                    saveTokenToPreference(oAuthToken);
+
                     //사용자 정보 요청
                     UserApiClient.getInstance().me((user, throwable1) -> {
                         String nickname=user.getKakaoAccount().getProfile().getNickname();
@@ -58,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         G.email=user.getKakaoAccount().getEmail();
                         Toast.makeText(LoginActivity.this, ""+G.email, Toast.LENGTH_SHORT).show();
+
 
 //                        //main화면으로 전환
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -85,5 +92,13 @@ public class LoginActivity extends AppCompatActivity {
     }
     void clickLoginNaver(){
 
+    }
+
+    public void saveTokenToPreference(OAuthToken token){
+        SharedPreferences preferences = getSharedPreferences("LoginToken", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("token", token+"");
+        editor.apply();
+        Log.d("TokenRead",token+"");
     }
 }

@@ -33,7 +33,6 @@ public class FragmentTodo extends Fragment{
 
     ArrayList<TodoItem> todoItems = new ArrayList<>();
     FragmentTodoBinding binding;
-    RecyclerItemTodoBinding binding2;
     TodoRecyclerAdapter adapter;
     String category = "오늘의할일";
     SQLiteDatabase db;
@@ -44,7 +43,6 @@ public class FragmentTodo extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding=FragmentTodoBinding.inflate(inflater,container,false);
-        binding2=RecyclerItemTodoBinding.inflate(inflater,container,false);
         binding.fabTodo.setOnClickListener(view -> clickfab());
 
         return binding.getRoot();
@@ -56,6 +54,7 @@ public class FragmentTodo extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         adapter = new TodoRecyclerAdapter(getContext(),todoItems);
         binding.todoRecyclerView.setAdapter(adapter);
+        loadTodoItem();
 
         adapter.setOnItemLongClickListener(new TodoRecyclerAdapter.OnItemLongClickListener() {
             @Override
@@ -63,9 +62,6 @@ public class FragmentTodo extends Fragment{
                 deletedItem(position);
             }
         });
-
-        loadTodoItem();
-
     }
 
     void deletedItem(int position){
@@ -88,8 +84,6 @@ public class FragmentTodo extends Fragment{
 
         // DialogAddTodoBinding으로부터 EditText를 참조합니다.
         TextInputLayout editTextTodo = dialogView.findViewById(R.id.text_input_layout_todo);
-
-
 
         builder.setView(dialogView);
 
@@ -120,11 +114,15 @@ public class FragmentTodo extends Fragment{
     public void loadTodoItem(){
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query("todo_bucket_list", null, null, null, null, null, null);
+
+        String[] columns = null; // 모든 열을 선택
+        String selection = "category = ?"; // category 열이 "오늘의할일"인 것만 선택
+        String[] selectionArgs = new String[]{"오늘의할일"};
+
+        Cursor cursor = db.query("todo_bucket_list", columns, selection, selectionArgs, null, null, null);
 
         while (cursor.moveToNext()) {
                  TodoItem todoItem = new TodoItem();
-
                  todoItem.id = cursor.getLong(0);
                  todoItem.msg = cursor.getString(1);
                  todoItem.checked = cursor.getInt(2) == 1;

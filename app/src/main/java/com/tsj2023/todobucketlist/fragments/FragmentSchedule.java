@@ -264,14 +264,6 @@ public class FragmentSchedule extends Fragment{
         dialog.show();
 
     }
-//    private String getSelectedDate() {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(calendarView.getDate());
-//        int year = calendar.get(Calendar.YEAR);
-//        int month = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1
-//        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-//        return year + "-" + month + "-" + dayOfMonth;
-//    }
 
     // SharedPreferences에 일정을 저장하는 메서드
     private void saveScheduleToSharedPreferences(String selectedDate, String schedule) {

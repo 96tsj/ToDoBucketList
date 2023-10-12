@@ -3,7 +3,10 @@ package com.tsj2023.todobucketlist.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -43,9 +46,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.activities.LoginActivity;
 import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.adapters.BucketListRecyclerAdapter;
+import com.tsj2023.todobucketlist.adapters.TodoRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.BucketlistItem;
+import com.tsj2023.todobucketlist.data.DatabaseHelper;
 import com.tsj2023.todobucketlist.data.TodoItem;
 import com.tsj2023.todobucketlist.databinding.FragmentBucketlistBinding;
 import com.tsj2023.todobucketlist.databinding.FragmentTodoBinding;
@@ -61,15 +67,18 @@ public class FragmentBucketList extends Fragment {
     PieChart pieChart;
     ArrayList<BucketlistItem> bucketlistItems = new ArrayList<>();
     BucketListRecyclerAdapter adapter;
-    boolean isCompleted = false;
-    RecyclerItemBucketlistBinding binding2;
     MainActivity activity;
+    SQLiteDatabase db;
+    DatabaseHelper dbHelper;
+    String category="버킷리스트";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentBucketlistBinding.inflate(inflater, container, false);
-        binding2 = RecyclerItemBucketlistBinding.inflate(getLayoutInflater(), container, false);
         binding.fabBucketlist.setOnClickListener(view -> clickfab());
+
+
 
         return binding.getRoot();
     }
@@ -88,7 +97,7 @@ public class FragmentBucketList extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (activity != null){
-            adapter=new BucketListRecyclerAdapter(activity,bucketlistItems);
+            adapter=new BucketListRecyclerAdapter(activity,bucketlistItems,getContext());
             adapter.setOnItemCheckedChangedListener(new BucketListRecyclerAdapter.OnItemCheckedChangedListener() {
                 @Override
                 public void onItemCheckedChanged(BucketlistItem item, boolean isChecked) {
@@ -100,6 +109,26 @@ public class FragmentBucketList extends Fragment {
             binding.bucketlistRecyclerView.setAdapter(adapter);
         }else {
             Toast.makeText(getContext(), "없음", Toast.LENGTH_SHORT).show();
+        }
+        adapter.setOnItemLongClickListener(new TodoRecyclerAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(int position) {
+                deletedItem(position);
+            }
+        });
+        loadBucketItem();
+    }
+    void deletedItem(int position){
+        if (position>=0&&position<bucketlistItems.size()){
+            BucketlistItem itemToDelete = bucketlistItems.get(position);
+
+            //데이터 베이스에서 삭제
+            deletedItemFromDatabase(itemToDelete.getId());
+
+            //리스트에서 삭제
+            bucketlistItems.remove(position);
+            adapter.notifyDataSetChanged();
+            updatePieChart();
         }
     }
     void clickfab(){
@@ -115,9 +144,13 @@ public class FragmentBucketList extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String s= editTextBucket.getEditText().getText().toString();
+                long id=activity.insertBucketItem(new BucketlistItem(s,false,category));
+
+                BucketlistItem newBucketlistItem = new BucketlistItem(id,s,false,category);
+
                 if (!TextUtils.isEmpty(s)){
 
-                    bucketlistItems.add(new BucketlistItem(s,false));
+                    bucketlistItems.add(newBucketlistItem);
                     updatePieChart();
                 }
             }
@@ -173,6 +206,52 @@ public class FragmentBucketList extends Fragment {
 
         Log.d("update s",completedCount+"");
 
+    }
+    public void loadBucketItem(){
+        DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+        db = dbHelper.getReadableDatabase();
+
+        String[] columns = null; // 모든 열을 선택
+        String selection = "category = ?"; // category 열이 "오늘의할일"인 것만 선택
+        String[] selectionArgs = new String[]{"버킷리스트"};
+
+        Cursor cursor = db.query("todo_bucket_list", columns, selection, selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            BucketlistItem bucketlistItem = new BucketlistItem();
+            bucketlistItem.id = cursor.getLong(0);
+            bucketlistItem.msg = cursor.getString(1);
+            bucketlistItem.checked = cursor.getInt(2) == 1;
+            bucketlistItem.category = cursor.getString(3);
+
+            bucketlistItems.add(bucketlistItem);
+        }
+        cursor.close();
+        db.close();
+
+        //데이터 추가후 어댑터 생성
+        adapter.notifyDataSetChanged();
+        updatePieChart();
+    }
+    public void deletedItemFromDatabase(long itemId){
+        dbHelper = activity.getDbHelper();
+        db=dbHelper.getWritableDatabase();
+
+        //데이터 베이스 트랜젝션 시작
+        db.beginTransaction();
+
+        try {
+            //삭제할 아이템의 ID를 사용하여 DELETE쿼리 실행
+            db.delete("todo_bucket_list","id = ?", new String[]{String.valueOf(itemId)});
+
+            //트랜젝션 성공
+            db.setTransactionSuccessful();
+        }catch (Exception e){
+            Log.e("DeleteItem","삭제실패 : " + e.getMessage());
+
+        }finally {
+            db.endTransaction();
+        }
     }
 
 }

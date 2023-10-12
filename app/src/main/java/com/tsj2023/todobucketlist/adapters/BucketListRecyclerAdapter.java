@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tsj2023.todobucketlist.R;
+import com.tsj2023.todobucketlist.activities.LoginActivity;
 import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.data.BucketlistItem;
 import com.tsj2023.todobucketlist.databinding.RecyclerItemBucketlistBinding;
@@ -37,14 +38,20 @@ import retrofit2.Retrofit;
 public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRecyclerAdapter.VH> {
 
     AppCompatActivity activity; // Activity 참조를 저장하기 위한 필드
+    Context context;
     ArrayList<BucketlistItem> bucketlistItems=new ArrayList<>();
     private BucketlistItem lastCheckedItem;
+    TodoRecyclerAdapter.OnItemLongClickListener onItemLongClickListener;
 
-
-    public BucketListRecyclerAdapter(AppCompatActivity activity, ArrayList<BucketlistItem> bucketlistItems) {
+    public BucketListRecyclerAdapter(AppCompatActivity activity, ArrayList<BucketlistItem> bucketlistItems,Context context) {
         this.activity = activity;
         this.bucketlistItems = bucketlistItems;
+        this.context = context;
 
+    }
+
+    public void setOnItemLongClickListener(TodoRecyclerAdapter.OnItemLongClickListener listener) {
+        this.onItemLongClickListener = listener;
     }
 
     @NonNull
@@ -57,9 +64,9 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        BucketlistItem bucketlistItem = bucketlistItems.get(position);
+        final BucketlistItem bucketlistItem = bucketlistItems.get(position);
         holder.tv.setText(bucketlistItem.getMsg());
-        holder.cb.setChecked(bucketlistItem.isChecked());
+        //holder.cb.setChecked(bucketlistItem.isChecked());
 
         holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -71,18 +78,28 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
                     //마지막체크된 아이템 저장
                     lastCheckedItem = bucketlistItem;
                     updateComplete();
-
                 }else {
                     holder.iv.setVisibility(View.INVISIBLE);
                     bucketlistItem.setChecked(b);
                 }
 
+                ((MainActivity)context).updateBucketItem(bucketlistItems.set(position,bucketlistItem));
+
                 if (listener!=null){
                     listener.onItemCheckedChanged(bucketlistItem,b);
                 }
-
             }
+        });
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (onItemLongClickListener != null){
+                    onItemLongClickListener.onItemLongClick(position);
+                    return true;
+                }
+                return false;
+            }
         });
 
     }
