@@ -121,7 +121,7 @@ public long insertBucketItem(BucketlistItem bucketlistItem){
         if (newRowId == -1){
 
         }else {
-            Toast.makeText(this, "데이터 추가에 실패", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "데이터 추가에 실패", Toast.LENGTH_SHORT).show();
         }
         return newRowId;
 }

@@ -6,6 +6,7 @@ public class BucketlistItem {
     public boolean checked;
     public long id;
     public String category = "버킷리스트";
+    public String email;
 
     public BucketlistItem(long id, String msg, boolean checked, String category) {
         this.id = id;

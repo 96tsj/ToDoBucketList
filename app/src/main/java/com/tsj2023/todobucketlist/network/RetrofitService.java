@@ -7,6 +7,8 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -22,4 +24,8 @@ public interface RetrofitService {
                                   @Part MultipartBody.Part filePart);
     @GET("TodoBucketlist/loadList.php")
     Call<ArrayList<CompleteItem>> loadDataFromServer();
+
+    @FormUrlEncoded
+    @POST("TodoBucketlist/loadList.php")
+    Call<String> postDataToLoadlist(@Field("email") String email);
 }

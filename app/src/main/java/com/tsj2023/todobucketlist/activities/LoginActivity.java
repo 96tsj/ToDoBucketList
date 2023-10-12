@@ -15,10 +15,21 @@ import com.kakao.sdk.user.UserApiClient;
 import com.tsj2023.todobucketlist.R;
 import com.tsj2023.todobucketlist.databinding.ActivityLoginBinding;
 import com.tsj2023.todobucketlist.network.G;
+import com.tsj2023.todobucketlist.network.RetrofitHelper;
+import com.tsj2023.todobucketlist.network.RetrofitService;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function12;
 import kotlin.jvm.functions.Function2;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.Field;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String keyHash= Utility.INSTANCE.getKeyHash(this);
         Log.d("keyHash",keyHash);
+
     }
 
     void clickLoginKakao(){
@@ -62,14 +74,16 @@ public class LoginActivity extends AppCompatActivity {
                         String nickname=user.getKakaoAccount().getProfile().getNickname();
                         String profileImage=user.getKakaoAccount().getProfile().getProfileImageUrl();
 
+                        G.email = null;
                         G.email=user.getKakaoAccount().getEmail();
                         Toast.makeText(LoginActivity.this, ""+G.email, Toast.LENGTH_SHORT).show();
-
 
 //                        //main화면으로 전환
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
+
+                        emailPost();
 
                         return null;
 
@@ -100,5 +114,37 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("token", token+"");
         editor.apply();
         Log.d("TokenRead",token+"");
+    }
+
+    void emailPost(){
+        Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
+        RetrofitService retrofitService= retrofit.create(RetrofitService.class);
+
+        String email = G.email;
+
+        if (email!=null){
+
+            //String데이터
+            Call<String> call = retrofitService.postDataToLoadlist(email);
+
+            Log.d("DebugLoad","Email: " + email);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String s= response.body();
+                    Log.d("Retrofit success","성공"+s);
+                    Toast.makeText(LoginActivity.this, "성공"+s, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("Retrofit Error", t.getMessage());
+                    Toast.makeText(LoginActivity.this, "실패", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Email is null", Toast.LENGTH_SHORT).show();
+        }
     }
 }

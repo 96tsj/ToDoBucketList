@@ -139,7 +139,7 @@ public class FragmentComplete extends Fragment {
             Log.d("selectedCompleteItem",selectedCompleteItem+"");
             adapter.notifyDataSetChanged(); // 어댑터에 변경 사항을 알립니다.
         }else {
-            Toast.makeText(getContext(), "setSelectedCompleteItem = null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "버킷리스트를 달성해 보세요", Toast.LENGTH_SHORT).show();
             Log.d("selectedCompleteItem",selectedCompleteItem+"");
         }
     }

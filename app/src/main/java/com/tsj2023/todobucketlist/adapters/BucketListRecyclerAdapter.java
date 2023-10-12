@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.tsj2023.todobucketlist.activities.LoginActivity;
 import com.tsj2023.todobucketlist.activities.MainActivity;
 import com.tsj2023.todobucketlist.data.BucketlistItem;
 import com.tsj2023.todobucketlist.databinding.RecyclerItemBucketlistBinding;
+import com.tsj2023.todobucketlist.network.G;
 import com.tsj2023.todobucketlist.network.RetrofitHelper;
 import com.tsj2023.todobucketlist.network.RetrofitService;
 
@@ -77,7 +79,11 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
                     bucketlistItem.setChecked(b);
                     //마지막체크된 아이템 저장
                     lastCheckedItem = bucketlistItem;
-                    updateComplete();
+                    if (isTokenAvailable()){
+                        updateComplete();
+                    }else {
+                        isTokenAvailable();
+                    }
                 }else {
                     holder.iv.setVisibility(View.INVISIBLE);
                     bucketlistItem.setChecked(b);
@@ -148,17 +154,21 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
         String title = lastCheckedItem.getMsg();
         // 연월일을 원하는 형식으로 포맷
         String date = String.format("%04d-%02d-%02d", year, month, dayOfMonth);
+        String email = G.email;
 
         if (title!=null){
             //String데이터들
             Map<String,String> dataPart=new HashMap<>();
             dataPart.put("title",title);
             dataPart.put("date",date);
+            dataPart.put("email",email);
 
             Call<String> call= retrofitService.postDataToServer(dataPart,null);
 
             Log.d("Debug", "Title: " + title);
             Log.d("Debug", "Date: " + date);
+            Log.d("Debug","Email: " + email);
+
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -177,6 +187,13 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
             Toast.makeText(activity, "title = null", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private boolean isTokenAvailable() {
+        SharedPreferences preferences = activity.getSharedPreferences("LoginToken", Context.MODE_PRIVATE);
+        String token = preferences.getString("token", "");
+        Log.d("TokenCheck3",token);
+        return !token.equals("null");
     }
 
 }

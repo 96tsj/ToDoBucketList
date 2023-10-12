@@ -78,8 +78,6 @@ public class FragmentBucketList extends Fragment {
         binding = FragmentBucketlistBinding.inflate(inflater, container, false);
         binding.fabBucketlist.setOnClickListener(view -> clickfab());
 
-
-
         return binding.getRoot();
     }
 
@@ -102,6 +100,8 @@ public class FragmentBucketList extends Fragment {
                 @Override
                 public void onItemCheckedChanged(BucketlistItem item, boolean isChecked) {
                     if (isChecked){
+                        updatePieChart();
+                    }else {
                         updatePieChart();
                     }
                 }
