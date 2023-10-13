@@ -32,6 +32,7 @@ import com.tsj2023.todobucketlist.adapters.CompleteRecyclerAdapter;
 import com.tsj2023.todobucketlist.data.CompleteItem;
 import com.tsj2023.todobucketlist.databinding.FragmentCompleteBinding;
 import com.tsj2023.todobucketlist.databinding.FragmentCompleteNotLoginBinding;
+import com.tsj2023.todobucketlist.network.G;
 import com.tsj2023.todobucketlist.network.RetrofitHelper;
 import com.tsj2023.todobucketlist.network.RetrofitService;
 
@@ -78,7 +79,8 @@ public class FragmentComplete extends Fragment {
     void loadData(){
         Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
         RetrofitService retrofitService=retrofit.create(RetrofitService.class);
-        Call<ArrayList<CompleteItem>> call=retrofitService.loadDataFromServer();
+        String email = G.email;
+        Call<ArrayList<CompleteItem>> call=retrofitService.loadDataFromServer(email);
         call.enqueue(new Callback<ArrayList<CompleteItem>>() {
             @Override
             public void onResponse(Call<ArrayList<CompleteItem>> call, Response<ArrayList<CompleteItem>> response) {

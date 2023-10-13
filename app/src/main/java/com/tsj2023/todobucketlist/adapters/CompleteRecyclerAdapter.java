@@ -40,7 +40,6 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
     ArrayList<CompleteItem> completeItems = new ArrayList<>();
     FragmentComplete fragmentComplete;
     int number;
-    String imgPath;
 
     public CompleteRecyclerAdapter(Context context, ArrayList<CompleteItem> completeItems, FragmentComplete fragmentComplete) {
         this.context = context;

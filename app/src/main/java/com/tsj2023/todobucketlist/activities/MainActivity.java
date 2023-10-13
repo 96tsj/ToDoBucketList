@@ -191,6 +191,4 @@ public void updateTodoItem(TodoItem item) {
         return dbHelper;
     }
 
-
-
 }

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.common.util.Utility;
 import com.kakao.sdk.user.UserApiClient;
@@ -18,6 +20,9 @@ import com.tsj2023.todobucketlist.network.G;
 import com.tsj2023.todobucketlist.network.RetrofitHelper;
 import com.tsj2023.todobucketlist.network.RetrofitService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +30,8 @@ import java.util.Map;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function12;
 import kotlin.jvm.functions.Function2;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,8 +90,6 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
 
-                        emailPost();
-
                         return null;
 
                     });
@@ -116,35 +121,5 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("TokenRead",token+"");
     }
 
-    void emailPost(){
-        Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
-        RetrofitService retrofitService= retrofit.create(RetrofitService.class);
 
-        String email = G.email;
-
-        if (email!=null){
-
-            //String데이터
-            Call<String> call = retrofitService.postDataToLoadlist(email);
-
-            Log.d("DebugLoad","Email: " + email);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    String s= response.body();
-                    Log.d("Retrofit success","성공"+s);
-                    Toast.makeText(LoginActivity.this, "성공"+s, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Log.e("Retrofit Error", t.getMessage());
-                    Toast.makeText(LoginActivity.this, "실패", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            Toast.makeText(this, "Email is null", Toast.LENGTH_SHORT).show();
-        }
-    }
 }

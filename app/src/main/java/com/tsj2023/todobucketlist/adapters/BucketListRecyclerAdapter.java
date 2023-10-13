@@ -186,7 +186,6 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<BucketListRe
         } else {
             Toast.makeText(activity, "title = null", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private boolean isTokenAvailable() {
