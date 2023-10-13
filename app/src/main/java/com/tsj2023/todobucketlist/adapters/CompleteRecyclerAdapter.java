@@ -1,6 +1,7 @@
 package com.tsj2023.todobucketlist.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -79,6 +81,7 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
             Log.d("itemImgPath",itemImgPath+"");
         }else {
         }
+
     }
 
     @Override
@@ -98,6 +101,14 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
             tv=binding.completeTitle;
             iv=binding.ivRecyclerItemComplete;
             ib=binding.selectImageBtn;
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    showDeleteConfirmationDialog(getAbsoluteAdapterPosition());
+                    return true;
+                }
+            });
         }
     }
     void updateComplete(String imgPath){
@@ -137,5 +148,46 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
         } else {
             Toast.makeText(context, "no=null", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void showDeleteConfirmationDialog(final int position) {
+        Retrofit retrofit= RetrofitHelper.getRetrofitInstance();
+        RetrofitService retrofitService= retrofit.create(RetrofitService.class);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("선택한 아이템을 삭제하시겠습니까?");
+        builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // 여기에서 선택한 아이템을 삭제하는 코드를 추가합니다.
+                CompleteItem completeItem = completeItems.get(position);
+                int itemNo = completeItem.getNo();
+                // 서버로 삭제 요청을 보내는 코드 작성
+                Call<String> call = retrofitService.deleteItem(itemNo);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (response.isSuccessful()) {
+                            // 서버에서 삭제 성공 응답을 받은 경우 로컬 목록에서 아이템을 삭제
+                            completeItems.remove(position);
+                            notifyDataSetChanged();
+                        } else {
+                            // 서버에서 삭제 실패 응답을 받은 경우 오류 처리
+                            Log.e("DeleteItem", "서버에서 아이템 삭제 실패");
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // 서버와 통신 중 에러 발생한 경우 처리
+                        Log.e("DeleteItem", "아이템 삭제 API 호출 중 에러: " + t.getMessage());
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 }

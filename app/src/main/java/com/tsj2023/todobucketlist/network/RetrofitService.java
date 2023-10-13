@@ -24,7 +24,11 @@ public interface RetrofitService {
     @POST("TodoBucketlist/completeList.php")
     Call<String> postDataToServer(@PartMap Map<String, String> dataPart,
                                   @Part MultipartBody.Part filePart);
-   @FormUrlEncoded
+    @FormUrlEncoded
     @POST("TodoBucketlist/loadList.php")
     Call<ArrayList<CompleteItem>> loadDataFromServer(@Field("email") String email);
+
+    @FormUrlEncoded
+    @POST("TodoBucketlist/deleteItem.php")
+    Call<String> deleteItem(@Field("no") int no);
 }

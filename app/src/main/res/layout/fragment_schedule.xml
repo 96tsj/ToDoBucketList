@@ -77,7 +77,8 @@
         android:textSize="18dp"
         android:gravity="center"
         android:hint="날짜를 선택후 일정을 입력해보세요."
-        android:background="@drawable/bg_button"/>
+        android:background="@drawable/bg_button"
+        android:fontFamily="@font/cookierunblack"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_schedule"
