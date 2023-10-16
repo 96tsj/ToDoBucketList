@@ -2,9 +2,11 @@ package com.tsj2023.todobucketlist.fragments;
 
 import static android.app.Activity.RESULT_CANCELED;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.content.CursorLoader;
@@ -69,7 +73,6 @@ public class FragmentComplete extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     public void onResume() {
@@ -98,7 +101,7 @@ public class FragmentComplete extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<CompleteItem>> call, Throwable t) {
-                Toast.makeText(getContext(), "error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "버킷리스트를 달성해 보세요!", Toast.LENGTH_SHORT).show();
                 Log.e("Json",t.getMessage()+"");
             }
         });
@@ -127,7 +130,7 @@ public class FragmentComplete extends Fragment {
         return  result;
     }
     public void onImagePickerRequested() {
-        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         resultLauncher.launch(intent);
     }
     public void setSelectedCompleteItem(CompleteItem item) {

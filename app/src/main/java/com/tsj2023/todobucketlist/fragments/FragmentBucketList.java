@@ -119,16 +119,34 @@ public class FragmentBucketList extends Fragment {
         loadBucketItem();
     }
     void deletedItem(int position){
-        if (position>=0&&position<bucketlistItems.size()){
+        if (position >= 0 && position < bucketlistItems.size()){
             BucketlistItem itemToDelete = bucketlistItems.get(position);
 
-            //데이터 베이스에서 삭제
-            deletedItemFromDatabase(itemToDelete.getId());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("삭제 확인");
+            builder.setMessage("아이템을 삭제하시겠습니까?");
+            builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-            //리스트에서 삭제
-            bucketlistItems.remove(position);
-            adapter.notifyDataSetChanged();
-            updatePieChart();
+                    //데이터 베이스에서 삭제
+                    deletedItemFromDatabase(itemToDelete.getId());
+
+                    //리스트에서 삭제
+                    bucketlistItems.remove(position);
+                    adapter.notifyDataSetChanged();
+                    updatePieChart();
+                }
+            });
+
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+
+            builder.create().show();
         }
     }
     void clickfab(){

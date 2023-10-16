@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -49,10 +49,6 @@ dependencies {
     //pie chart library
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    //kizitonwose calender library
-    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-
     //volley
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.android.volley:volley:1.2.1'
@@ -61,9 +57,6 @@ dependencies {
     // Kakao SDK
     implementation "com.kakao.sdk:v2-user:2.16.0"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'// 카카오 로그인
-
-    // materialcalendarview
-
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

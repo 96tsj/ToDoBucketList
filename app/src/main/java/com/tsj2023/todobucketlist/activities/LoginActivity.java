@@ -107,10 +107,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     void clickLoginGoogle(){
-
+        Toast.makeText(this, "업데이트 중비중입니다.", Toast.LENGTH_SHORT).show();
     }
     void clickLoginNaver(){
-
+        Toast.makeText(this, "업데이트 중비중입니다.", Toast.LENGTH_SHORT).show();
     }
 
     public void saveTokenToPreference(OAuthToken token){

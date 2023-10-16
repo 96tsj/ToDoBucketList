@@ -65,15 +65,37 @@ public class FragmentTodo extends Fragment{
     }
 
     void deletedItem(int position){
-        if (position>=0&&position<todoItems.size()){
+        if (position >= 0 && position < todoItems.size()) {
             TodoItem itemToDelete = todoItems.get(position);
 
-            //데이터 베이스에서 삭제
-            deletedItemFromDatabase(itemToDelete.getId());
+            // 다이얼로그 생성
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("삭제 확인");
+            builder.setMessage("아이템을 삭제하시겠습니까?");
 
-            //리스트에서 삭제
-            todoItems.remove(position);
-            adapter.notifyDataSetChanged();
+            builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    // 데이터베이스에서 삭제
+                    deletedItemFromDatabase(itemToDelete.getId());
+
+                    // 리스트에서 삭제
+                    todoItems.remove(position);
+                    adapter.notifyDataSetChanged();
+
+                }
+            });
+
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+
+            // 다이얼로그 표시
+            builder.create().show();
         }
     }
 
