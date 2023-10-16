@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/dialog_toolbar_bucketlist"
+        android:id="@+id/dialog_toolbar_schedule"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginBottom="30dp"
@@ -13,26 +14,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="버킷리스트 등록"
+            android:text="일정 추가"
             android:fontFamily="@font/cookierunblack"
             android:textColor="@color/white"
             android:textSize="20sp"/>
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout_bucket"
+        android:id="@+id/text_input_layout_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="버킷리스트를 입력하세요"
+        android:hint="일정을 입력하세요"
         android:gravity="center"
-        android:layout_below="@+id/dialog_toolbar_bucketlist"
+        android:layout_below="@+id/dialog_toolbar_schedule"
         android:layout_marginBottom="20dp"
         android:layout_margin="15dp">
         
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="360dp"
             android:layout_height="wrap_content"
-            android:maxLength="21"
+            android:maxLength="40"
+            android:text=""
             android:inputType="text"/>
         
     </com.google.android.material.textfield.TextInputLayout>

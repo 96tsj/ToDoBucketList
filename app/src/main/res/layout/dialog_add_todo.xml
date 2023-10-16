@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_button">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/dialog_toolbar_todo"
@@ -21,38 +21,22 @@
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout"
+        android:id="@+id/text_input_layout_todo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="일정을 입력하세요"
         android:gravity="center"
         android:layout_below="@+id/dialog_toolbar_todo"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:layout_margin="15dp">
         
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="360dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLength="21"
+            android:text=""
+            android:inputType="text"/>
         
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/dialog_add_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="등록"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/text_input_layout"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="10dp"/>
-    <Button
-        android:id="@+id/dialog_cancle_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="취소"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_below="@+id/text_input_layout"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>

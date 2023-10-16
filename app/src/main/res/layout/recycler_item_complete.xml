@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_margin="16dp"
     android:background="@drawable/bg_button"
-    android:padding="16dp">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toobar_recycler_item_complete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@drawable/bg_button">
+    android:padding="8dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2023-98-12 공부 5만시간하기 5번 반복하면"
-            android:layout_gravity="center"
-            android:id="@+id/toolbar_title"
-            android:textSize="16sp"
+            android:id="@+id/complete_title"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:text="가나다라바사"
+            android:gravity="center"
+            android:textSize="15sp"
             android:fontFamily="@font/cookierunblack"
             android:layout_marginRight="5dp"
-            android:maxLength="27"/>
+            android:maxLength="25"
+            android:background="@drawable/bg_button" />
 
         <ImageButton
+            android:id="@+id/select_image_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/baseline_add_24"
             android:background="@color/white"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="17dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:clickable="true"/>
 
-    </androidx.appcompat.widget.Toolbar>
     <ImageView
         android:id="@+id/iv_recycler_item_complete"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="200dp"
         android:scaleType="fitXY"
-        android:background="@drawable/bg_button" />
+        android:background="@drawable/bg_button"
+        android:layout_below="@+id/complete_title"
+        android:src="@drawable/bg_splash"/>
 
-</LinearLayout>
+</RelativeLayout>
