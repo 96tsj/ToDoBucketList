@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -130,8 +131,15 @@ public class FragmentComplete extends Fragment {
         return  result;
     }
     public void onImagePickerRequested() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        resultLauncher.launch(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10 이상에서는 MediaStore를 사용하여 파일을 선택합니다.
+            Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+            resultLauncher.launch(intent);
+        } else {
+            // Android 9 이하에서는 이전 방식을 사용합니다.
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            resultLauncher.launch(intent);
+        }
     }
     public void setSelectedCompleteItem(CompleteItem item) {
         selectedCompleteItem = item;

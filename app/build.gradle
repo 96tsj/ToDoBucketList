@@ -55,9 +55,11 @@ dependencies {
     implementation 'com.google.firebase:protolite-well-known-types:18.0.0'
 
     // Kakao SDK
-    implementation "com.kakao.sdk:v2-user:2.16.0"
+    implementation "com.kakao.sdk:v2-user:2.16.0"// 카카오 로그인
+
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'// 카카오 로그인
+
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
