@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<String> permissionResult = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
         public void onActivityResult(Boolean result) {
-            if (result) Toast.makeText(MainActivity.this, "저장소 사용 가능", Toast.LENGTH_SHORT).show();
-            else Toast.makeText(MainActivity.this, "저장소 사용 불가", Toast.LENGTH_SHORT).show();
+            if (result) Log.d("저장소 퍼미션","저장소 사용가능");
+            else Log.d("저장소 퍼미션","저장소 사용불가");
         }
     });
 
