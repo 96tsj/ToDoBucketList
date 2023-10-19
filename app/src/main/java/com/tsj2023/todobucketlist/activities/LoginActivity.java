@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         G.email = null;
                         G.email=user.getKakaoAccount().getEmail();
-                        Toast.makeText(LoginActivity.this, ""+G.email, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LoginActivity.this, ""+G.email, Toast.LENGTH_SHORT).show();
 
 //                        //main화면으로 전환
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
