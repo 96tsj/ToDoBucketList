@@ -105,7 +105,7 @@ public class CompleteRecyclerAdapter extends RecyclerView.Adapter<CompleteRecycl
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    showDeleteConfirmationDialog(getAbsoluteAdapterPosition());
+                    showDeleteConfirmationDialog(getAdapterPosition());
                     return true;
                 }
             });
